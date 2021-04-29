@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97cdb001a0f054c04b691161acd02717, type: 3}
+  m_Name: AudioDatabase
+  m_EditorClassIdentifier: 
+  bgmList:
+  - key: lo-fi
+    clip: {fileID: 8300000, guid: 448eaaa8d516a4adf88dd11656adc16f, type: 3}
+  bgsList:
+  - key: noise
+    clip: {fileID: 8300000, guid: cb26e32aee513420fa58e73b74c096c0, type: 3}
+  seList:
+  - key: enter
+    clip: {fileID: 8300000, guid: d0236384c960742e3accf7c661a2feee, type: 3}
+  - key: cancel
+    clip: {fileID: 8300000, guid: df433883200b0481fb0c22cbc6bc3aec, type: 3}
+  - key: choose
+    clip: {fileID: 8300000, guid: d21b47579e4214dbc9b621ee72a28d6e, type: 3}
+  - key: voice
+    clip: {fileID: 8300000, guid: 37411906c37e44ade80ec539fabbb9d9, type: 3}
