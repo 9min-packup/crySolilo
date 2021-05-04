@@ -7,58 +7,141 @@ public class Test : MonoBehaviour
 {
     public string bgKey, charaKey, charaFaceKey, fontkey, bgmKey, bgsKey, seKey;
     public Vector2 charaPos, txtboxsizeDelta, txtboxposition, txtSizeDelta;
+    public int seIndex;
+    public string scenarioKey;
+    public string tagString;
+    public string textTagString;
+    public string nameTagString;
 
-    [ContextMenu("Test Show BG")]
+    [TextArea]
+    public string text;
+
+    [ContextMenu("Show BG")]
     public void ShowBG()
     {
         CRY_SOLILO.System.uiManager.ShowBg(bgKey);
     }
 
-    [ContextMenu("Test Show Chara")]
+    [ContextMenu("Show Chara")]
     public void ShowChara()
     {
         CRY_SOLILO.System.uiManager.ShowCaracter(charaKey, charaFaceKey, charaPos);
     }
 
-    [ContextMenu("Test Clear BG")]
+    [ContextMenu("Clear BG")]
     public void ClearBG()
     {
         CRY_SOLILO.System.uiManager.ClearBG();
     }
 
-    [ContextMenu("Test Hide Chara")]
+    [ContextMenu("Hide Chara")]
     public void HideChara()
     {
         CRY_SOLILO.System.uiManager.HideCharacter(charaKey);
     }
 
-    [ContextMenu("Test Show TextBox")]
+    [ContextMenu("Show TextBox")]
     public void ShowTextBox()
     {
         CRY_SOLILO.System.uiManager.ShowTextBox();
     }
-    [ContextMenu("Test Hide TextBox")]
+
+    [ContextMenu("Show Text")]
+    public void ShowText()
+    {
+        CRY_SOLILO.System.uiManager.ShowText(text);
+    }
+
+    [ContextMenu("Show Text(add)")]
+    public void ShowTextAdd()
+    {
+        CRY_SOLILO.System.uiManager.ShowText(text, true);
+    }
+
+    [ContextMenu("Skip Text")]
+    public void SkipText()
+    {
+        CRY_SOLILO.System.uiManager.SkipText();
+    }
+
+
+    [ContextMenu("Hide TextBox")]
     public void HideTextBox()
     {
         CRY_SOLILO.System.uiManager.HideTextBox();
     }
 
-    [ContextMenu("Test BGM ")]
+    [ContextMenu("Play BGM ")]
     public void PlayBgm()
     {
         CRY_SOLILO.System.audioManager.PlayBGM(bgmKey, true, 1.0f, 1.0f, 1.0f, 0.2f, 1.0f);
     }
 
-    [ContextMenu("Test BGS ")]
+    [ContextMenu("Stop BGM ")]
+    public void StopBgm()
+    {
+        CRY_SOLILO.System.audioManager.StopBGM(1.0f);
+    }
+
+    [ContextMenu("Play BGS ")]
     public void PlayBgs()
     {
         CRY_SOLILO.System.audioManager.PlayBGS(bgsKey, true, 1.0f, 1.0f, 1.0f, 0.2f, 1.0f);
     }
 
-    [ContextMenu("Test SE ")]
+    [ContextMenu("Stop BGS ")]
+    public void StopBgs()
+    {
+        CRY_SOLILO.System.audioManager.StopBGS(1.0f);
+    }
+
+    [ContextMenu("Play SE ")]
     public void PlaySe()
     {
-        CRY_SOLILO.System.audioManager.PlaySE(seKey, false, 1.0f, 1.0f);
+        CRY_SOLILO.System.audioManager.PlaySE(seKey, seIndex, false, 1.0f, 1.0f);
     }
+
+    [ContextMenu("Stop SE")]
+    public void StopSe()
+    {
+        CRY_SOLILO.System.audioManager.StopSE(seIndex);
+    }
+
+    [ContextMenu("Load Scenario")]
+    public void LoadScenario()
+    {
+        CRY_SOLILO.System.scenarioManager.LoadScenario(scenarioKey);
+    }
+
+    [ContextMenu("Create Tag")]
+    public void CreateTag()
+    {
+        Tag tag = Tag.CreateTag(tagString);
+
+        Debug.Log(tag.ToString());
+    }
+
+    [ContextMenu("Create Text Tag")]
+    public void CreateTextTag()
+    {
+        Tag tag = Tag.CreateTextTag(textTagString);
+
+        Debug.Log(tag.ToString());
+    }
+
+    [ContextMenu("Create Name Tag")]
+    public void CreateNameTag()
+    {
+        Tag tag = Tag.CreateNameTag(nameTagString);
+        Debug.Log(tag.ToString());
+    }
+
+    [ContextMenu("Execute Scenario")]
+    public void ExecuteScenario()
+    {
+        CRY_SOLILO.System.scenarioManager.ExecuteScenario();
+    }
+
+
 
 }

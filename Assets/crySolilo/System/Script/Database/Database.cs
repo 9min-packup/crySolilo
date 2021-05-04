@@ -13,6 +13,7 @@ namespace CrySolilo
         private Dictionary<string, int> character = new Dictionary<string, int>();
         private Dictionary<string, Dictionary<string, int>> characterFace = new Dictionary<string, Dictionary<string, int>>();
         private Dictionary<string, int> font = new Dictionary<string, int>();
+        private Dictionary<string, int> scenario = new Dictionary<string, int>();
 
         [SerializeField]
         private AudioDatabase audioDatabase;
@@ -20,6 +21,8 @@ namespace CrySolilo
         private ImageDatabase imageDatabase;
         [SerializeField]
         private FontDatabase fontDatabase;
+        [SerializeField]
+        private ScenarioDatabase scenarioDatabase;
 
         private void Awake()
         {
@@ -54,6 +57,11 @@ namespace CrySolilo
             {
                 font.Add(fontDatabase.fontList[i].key, i);
             }
+            for (int i = 0; i < scenarioDatabase.scenarioList.Length; i++)
+            {
+                scenario.Add(scenarioDatabase.scenarioList[i].key, i);
+            }
+
 
         }
 
@@ -233,6 +241,26 @@ namespace CrySolilo
                 return null;
             }
             return fontDatabase.fontList[index].font;
+        }
+
+        public TextAsset GetScenario(string key)
+        {
+            int index = 0;
+            if (scenario.ContainsKey(key))
+            {
+                index = scenario[key];
+            }
+            else
+            {
+                Debug.LogWarning("Scenario Database: Key " + key + " Not Found");
+                return null;
+            }
+            if (index < 0 || index >= scenarioDatabase.scenarioList.Length)
+            {
+                Debug.LogWarning("Scenario Database: Index " + index + " Out Of bounds");
+                return null;
+            }
+            return scenarioDatabase.scenarioList[index].scenario;
         }
 
     }

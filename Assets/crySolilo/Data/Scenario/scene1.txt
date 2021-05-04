@@ -1,0 +1,8 @@
+
+
+
+;これはコメントだよ
+
+[bg key="title" time=1000]
+[chara_show key="crySolilo" time=1000]
+

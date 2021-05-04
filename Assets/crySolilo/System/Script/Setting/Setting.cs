@@ -8,6 +8,8 @@ namespace CrySolilo
     public class Setting : ScriptableObject
     {
         [SerializeField]
+        public string firstScenarioKey = "first";
+        [SerializeField]
         public string defaultFontKey = "Arial";
         [SerializeField]
         public int defaultFontSpeed = 20;

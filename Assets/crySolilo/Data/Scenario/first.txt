@@ -1,0 +1,23 @@
+
+
+
+;これはコメントだよ
+[bg key="title" time=1000]
+[wait time=1000]
+[bg key="bg" time=1000]
+[message_show]
+[chara_show key="crySolilo" faceKey="normal" time=1000]
+#crySolilo
+こんにちは。[p]
+私はcrySolilo。[p]
+おはぎおはぎおはぎおはぎおはぎ！[p]
+私のおはぎが消えた。[r][l]
+いったいどこへ消えたんだ！！[p]
+
+たまらなく煮えたぎる甘味。[r][l]
+みんなどこへ消えた...[p]
+
+またそういうこと言うの？[r]
+バイタルたけえなあおい。[r]
+うまうまだ。[r]
+[s]

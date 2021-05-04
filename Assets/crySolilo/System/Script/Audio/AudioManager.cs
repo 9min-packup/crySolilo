@@ -19,7 +19,8 @@ namespace CrySolilo
         public string bgmKey;
         public string bgsKey;
 
-        public AudioSource BGM_Speaker, BGS_Speaker, SE_Speaker;
+        public AudioSource BGM_Speaker, BGS_Speaker;
+        public AudioSource[] SE_Speakers;
         private Coroutine bgmCoro, bgsCoro;
 
         public bool isBgmFade, isBgsFade;
@@ -64,7 +65,7 @@ namespace CrySolilo
             {
                 return;
             }
-            Play(BGS_Speaker, audioClip, isLoop, volume, pitch);
+            Play(BGM_Speaker, audioClip, isLoop, volume, pitch);
         }
 
         public void PlayBGM(string key, bool isLoop, float volume, float pitch, float fadeOut, float wait, float fadeIn)
@@ -77,34 +78,93 @@ namespace CrySolilo
             PlayBGM(BGM_Speaker, audioClip, isLoop, BGM_Speaker.volume, volume, pitch, fadeOut, wait, fadeIn);
         }
 
+        public void StopBGM()
+        {
+            Stop(BGM_Speaker);
+        }
+
+        public void StopBGM(float fadeOut)
+        {
+            StopBGM(BGM_Speaker, BGM_Speaker.volume, fadeOut);
+        }
+
         public void PlayBGS(string key, bool isLoop, float volume, float pitch)
         {
+            if (bgmKey == key)
+            {
+                return;
+            }
             AudioClip audioClip = CRY_SOLILO.System.database.GetBgs(key);
             if (audioClip == null)
             {
                 return;
             }
+            bgmKey = key;
             Play(BGM_Speaker, audioClip, isLoop, volume, pitch);
         }
 
         public void PlayBGS(string key, bool isLoop, float volume, float pitch, float fadeOut, float wait, float fadeIn)
         {
+            if (bgsKey == key)
+            {
+                return;
+            }
             AudioClip audioClip = CRY_SOLILO.System.database.GetBgs(key);
             if (audioClip == null)
             {
                 return;
             }
+            bgsKey = key;
             PlayBGS(BGS_Speaker, audioClip, isLoop, BGS_Speaker.volume, volume, pitch, fadeOut, wait, fadeIn);
         }
 
-        public void PlaySE(string key, bool isLoop, float volume, float pitch)
+        public void StopBGS()
         {
+            bgmKey = "";
+            Stop(BGM_Speaker);
+        }
+
+        public void StopBGS(float fadeOut)
+        {
+            bgsKey = "";
+            StopBGS(BGS_Speaker, BGS_Speaker.volume, fadeOut);
+        }
+
+        public void PlaySE(string key, int index, bool isLoop, float volume, float pitch)
+        {
+            if (index < 0 || index >= SE_Speakers.Length)
+            {
+                Debug.LogWarning("SE Speaker Index Out of bounds.  ");
+            }
+
             AudioClip audioClip = CRY_SOLILO.System.database.GetSe(key);
             if (audioClip == null)
             {
                 return;
             }
-            Play(SE_Speaker, audioClip, isLoop, volume, pitch);
+            Play(SE_Speakers[index], audioClip, isLoop, volume, pitch);
+        }
+
+        public void StopSE()
+        {
+            int index = 0;
+            if (index < 0 || index >= SE_Speakers.Length)
+            {
+                Debug.LogWarning("SE Speakers is empty.  ");
+            }
+
+            Stop(SE_Speakers[index]);
+        }
+
+
+        public void StopSE(int index)
+        {
+            if (index < 0 || index >= SE_Speakers.Length)
+            {
+                Debug.LogWarning("SE Speaker Index Out of bounds.  ");
+            }
+
+            Stop(SE_Speakers[index]);
         }
 
         private void Play(AudioSource source, AudioClip clip, bool isLoop, float volume, float pitch)
@@ -115,6 +175,14 @@ namespace CrySolilo
             source.pitch = pitch;
             source.Play();
         }
+
+        private void Stop(AudioSource source)
+        {
+            source.Stop();
+            source.clip = null;
+            source.loop = false;
+        }
+
 
         private void PlayBGM(AudioSource source, AudioClip clip, bool isLoop, float volumeFrom, float volumeTo, float pitch, float fadeOut, float wait, float fadeIn)
         {
@@ -128,8 +196,32 @@ namespace CrySolilo
 
         private void PlayBGS(AudioSource source, AudioClip clip, bool isLoop, float volumeFrom, float volumeTo, float pitch, float fadeOut, float wait, float fadeIn)
         {
+            if (bgsCoro != null && isBgsFade)
+            {
+                StopCoroutine(bgsCoro);
+            }
 
             bgsCoro = StartCoroutine(PlayWithFadeBGS(source, clip, isLoop, volumeFrom, volumeTo, pitch, fadeOut, wait, fadeIn));
+        }
+
+        private void StopBGM(AudioSource source, float volumeFrom, float fadeOut)
+        {
+            if (bgmCoro != null && isBgmFade)
+            {
+                StopCoroutine(bgmCoro);
+            }
+
+            bgmCoro = StartCoroutine(StopWithFadeBGM(source, volumeFrom, fadeOut));
+        }
+
+        private void StopBGS(AudioSource source, float volumeFrom, float fadeOut)
+        {
+            if (bgsCoro != null && isBgsFade)
+            {
+                StopCoroutine(bgsCoro);
+            }
+
+            bgsCoro = StartCoroutine(StopWithFadeBGS(source, volumeFrom, fadeOut));
         }
 
         private IEnumerator PlayWithFadeBGM(AudioSource source, AudioClip clip, bool isLoop, float volumeFrom, float volumeTo, float pitch, float fadeOut, float wait, float fadeIn)
@@ -261,7 +353,77 @@ namespace CrySolilo
                 }
                 source.volume = to;
             }
+            isBgsFade = false;
             yield break;
         }
+
+
+        private IEnumerator StopWithFadeBGM(AudioSource source, float volumeFrom, float fadeOut)
+        {
+            isBgmFade = true;
+
+            if (fadeOut <= 0.0f)
+            {
+                source.Stop();
+            }
+            else
+            {
+                //fade out
+                float from = Mathf.Clamp(volumeFrom, 0.0f, 1.0f);
+                float to = 0.0f;
+                float diff = to - from;
+                float startTime, timer = 0.0f;
+                startTime = Time.time;
+                source.volume = from;
+                while (timer <= fadeOut)
+                {
+                    source.volume = from + (diff * (timer / fadeOut));
+                    timer = Time.time - startTime;
+                    yield return null;
+                }
+
+                source.volume = to;
+            }
+
+            source.Stop();
+            source.clip = null;
+            source.loop = false;
+            isBgmFade = false;
+            yield break;
+        }
+
+        private IEnumerator StopWithFadeBGS(AudioSource source, float volumeFrom, float fadeOut)
+        {
+
+            if (fadeOut <= 0.0f)
+            {
+                source.Stop();
+            }
+            else
+            {
+                //fade out
+                float from = Mathf.Clamp(volumeFrom, 0.0f, 1.0f);
+                float to = 0.0f;
+                float diff = to - from;
+                float startTime, timer = 0.0f;
+                startTime = Time.time;
+                source.volume = from;
+                while (timer <= fadeOut)
+                {
+                    source.volume = from + (diff * (timer / fadeOut));
+                    timer = Time.time - startTime;
+                    yield return null;
+                }
+                source.volume = to;
+            }
+
+            source.Stop();
+            source.clip = null;
+            source.loop = false;
+            isBgsFade = false;
+            yield break;
+        }
+
+
     }
 }

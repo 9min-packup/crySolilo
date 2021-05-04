@@ -12,14 +12,14 @@ namespace CrySolilo
         private UIBg uibg = new UIBg();
         private Dictionary<string, UICharacter> uicharaDict = new Dictionary<string, UICharacter>();
         private UIText uiText = new UIText();
+        public float pH, sdy;
 
-
-        public void ShowBg(string key, float time = 1.0f)
+        public Coroutine ShowBg(string key, float time = 1.0f)
         {
             Sprite bgSprite = CRY_SOLILO.System.database.GetBg(key);
             if (bgSprite == null)
             {
-                return;
+                return null;
             }
             if (uibg.bgCoro != null)
             {
@@ -58,9 +58,10 @@ namespace CrySolilo
                     uibg.bgCoro = null;
                 }
             });
+            return uibg.bgCoro;
         }
 
-        public void ClearBG(float time = 1.0f)
+        public Coroutine ClearBG(float time = 1.0f)
         {
             if (uibg.bgCoro != null)
             {
@@ -74,7 +75,7 @@ namespace CrySolilo
             }
             if (uibg.bgFore == null)
             {
-                return;
+                return null;
             }
             uibg.bgCoro = TweenUI.Fade(this, uibg.bgImageFore, new Color(1.0f, 1.0f, 1.0f, 1.0f), new Color(1.0f, 1.0f, 1.0f, 0.0f), time, 0.0f, () =>
             {
@@ -85,15 +86,16 @@ namespace CrySolilo
                     uibg.bgCoro = null;
                 }
             });
+            return uibg.bgCoro;
 
         }
 
-        public void ShowCaracter(string key, string faceKey, Vector2 position, float time = 1.0f, bool isClossFade = true)
+        public Coroutine ShowCaracter(string key, string faceKey, Vector2 position, float time = 1.0f, bool isClossFade = true)
         {
             Sprite charaSprite = CRY_SOLILO.System.database.GetCharacterFace(key, faceKey);
             if (charaSprite == null)
             {
-                return;
+                return null;
             }
             UICharacter uichara;
             if (uicharaDict.ContainsKey(key))
@@ -163,9 +165,10 @@ namespace CrySolilo
                     }
                 });
             }
+            return uichara.charaCoro;
         }
 
-        public void HideCharacter(string key, float time = 1.0f)
+        public Coroutine HideCharacter(string key, float time = 1.0f)
         {
             UICharacter uichara;
             if (uicharaDict.ContainsKey(key))
@@ -174,7 +177,7 @@ namespace CrySolilo
             }
             else
             {
-                return;
+                return null;
             }
 
             if (uichara.charaCoro != null)
@@ -190,7 +193,7 @@ namespace CrySolilo
             }
             if (uichara.charaFore == null)
             {
-                return;
+                return null;
             }
             uichara.charaCoro = TweenUI.Fade(this, uichara.charaImageFore, new Color(1.0f, 1.0f, 1.0f, 1.0f), new Color(1.0f, 1.0f, 1.0f, 0.0f), time, 0.0f, () =>
             {
@@ -202,6 +205,7 @@ namespace CrySolilo
                     uichara.charaCoro = null;
                 }
             });
+            return uichara.charaCoro;
         }
 
         public void ShowTextBox()
@@ -254,15 +258,76 @@ namespace CrySolilo
             uiText.text = null;
         }
 
-        public void ShowText(string str)
+        public Coroutine ShowText(string str, bool add = false)
         {
-
-
+            if (uiText.text == null)
+            {
+                return null;
+            }
+            uiText.textCoro = StartCoroutine(ShowTextIE(str, add));
+            return uiText.textCoro;
         }
 
-        public IEnumerator ShowTextIE(string str)
+        public void ClearText()
         {
+            if (uiText.text == null)
+            {
+                return;
+            }
+            uiText.text.text = "";
+        }
 
+        public void SkipText()
+        {
+            if (uiText.isTextShowing)
+            {
+                uiText.isTextSkip = true;
+            }
+        }
+
+        private IEnumerator ShowTextIE(string str, bool add)
+        {
+            uiText.isTextShowing = true;
+            uiText.isTextSkip = false;
+            float wait = 1.0f / uiText.textSpeed;
+            int startCount;
+            string showString;
+            if (add)
+            {
+                startCount = uiText.text.text.Length;
+                showString = uiText.text.text + str;
+            }
+            else
+            {
+                startCount = 1;
+                showString = str;
+            }
+            for (int count = startCount; count <= showString.Length; count++)
+            {
+
+                pH = uiText.text.preferredHeight;
+                sdy = uiText.text.rectTransform.rect.height;
+
+                if (uiText.text != null)
+                {
+                    uiText.text.text = showString.Substring(0, count);
+                }
+
+                if (uiText.text.preferredHeight > uiText.text.rectTransform.rect.height)
+                {
+                    showString = showString.Substring(count - 1, showString.Length - count + 1);
+                    count = 1;
+                }
+                if (((wait * count) >= uiText.skipAbleTime) && uiText.isTextSkip)
+                {
+                    break;
+                }
+                yield return new WaitForSecondsRealtime(wait);
+            }
+            uiText.isTextSkip = false;
+            uiText.text.text = showString;
+            yield return new WaitForSecondsRealtime(uiText.skipAbleTime);
+            uiText.isTextShowing = false;
             yield break;
         }
 
@@ -293,6 +358,9 @@ namespace CrySolilo
             public int textSpeed = 20;
             public RectTransform textRect;
             public Text text;
+            public bool isTextSkip = false;
+            public bool isTextShowing = false;
+            public float skipAbleTime = 0.0f;
             public Coroutine textCoro;
         }
     }
