@@ -12,6 +12,7 @@ public class Test : MonoBehaviour
     public string tagString;
     public string textTagString;
     public string nameTagString;
+    public string jumpTarget;
 
     [TextArea]
     public string text;
@@ -140,6 +141,12 @@ public class Test : MonoBehaviour
     public void ExecuteScenario()
     {
         CRY_SOLILO.System.scenarioManager.ExecuteScenario();
+    }
+
+    [ContextMenu("Jump Scenario")]
+    public void Jump()
+    {
+        CRY_SOLILO.System.scenarioManager.Jump(jumpTarget);
     }
 
 

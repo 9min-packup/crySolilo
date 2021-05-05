@@ -7,10 +7,14 @@ namespace CrySolilo
 {
     public class ScenarioManager : MonoBehaviour
     {
+        public int scenarioIndex = 0;
+        private int scenarioIndexCache = 0;
         public Tag[] tags;
         public Dictionary<string, int> labelIndexDict = new Dictionary<string, int>();
 
         private bool waitForSubmit = false;
+
+        private Coroutine skipCoro, executeCoro;
 
         private void Start()
         {
@@ -256,77 +260,293 @@ namespace CrySolilo
 
         public void ExecuteScenario()
         {
-            StartCoroutine(ExecuteScenarioIE());
+            executeCoro = StartCoroutine(ExecuteScenarioIE());
         }
 
         private IEnumerator ExecuteScenarioIE()
         {
-            Coroutine coro = StartCoroutine(SkipTextIE());
-            for (int i = 0; i < tags.Length; i++)
+            skipCoro = StartCoroutine(SkipTextIE());
+            scenarioIndex = 0;
+            while (scenarioIndex < tags.Length)
             {
-                if (tags[i].tagName == "text")
+                if (tags[scenarioIndex].tagName == "text")
                 {
-                    yield return CRY_SOLILO.System.uiManager.ShowText(tags[i].properties["val"], true);
+                    yield return CRY_SOLILO.System.uiManager.ShowText(tags[scenarioIndex].properties["val"], true);
                 }
-                else if (tags[i].tagName == "name")
+                else if (tags[scenarioIndex].tagName == "name")
                 {
-                    CRY_SOLILO.System.uiManager.ShowName(tags[i].properties["val"]);
+                    CRY_SOLILO.System.uiManager.ShowName(tags[scenarioIndex].properties["val"]);
                 }
 
-                else if (tags[i].tagName == "bg")
+                else if (tags[scenarioIndex].tagName == "bg")
                 {
-                    float time = 0;
+                    float time = 1.0f;
                     string key = "";
-                    if (tags[i].properties.ContainsKey("time"))
+                    if (tags[scenarioIndex].properties.ContainsKey("time"))
                     {
-                        time = float.Parse(tags[i].properties["time"]);
+                        time = float.Parse(tags[scenarioIndex].properties["time"]);
                         time = time / 1000.0f;
                     }
-                    if (tags[i].properties.ContainsKey("key"))
+                    if (tags[scenarioIndex].properties.ContainsKey("key"))
                     {
-                        key = tags[i].properties["key"];
+                        key = tags[scenarioIndex].properties["key"];
                     }
                     yield return CRY_SOLILO.System.uiManager.ShowBg(key, time);
                 }
-                else if (tags[i].tagName == "message_hide")
+                else if (tags[scenarioIndex].tagName == "message_hide")
                 {
                     CRY_SOLILO.System.uiManager.HideTextBox();
                 }
-                else if (tags[i].tagName == "message_show")
+                else if (tags[scenarioIndex].tagName == "message_show")
                 {
                     CRY_SOLILO.System.uiManager.ShowTextBox();
                 }
-                else if (tags[i].tagName == "chara_show")
+                else if (tags[scenarioIndex].tagName == "chara_show")
                 {
-                    float time = 0;
+                    float time = 1.0f;
                     string key = "";
                     string faceKey = "";
                     float x = 0;
                     float y = 0;
-                    if (tags[i].properties.ContainsKey("time"))
+                    if (tags[scenarioIndex].properties.ContainsKey("time"))
                     {
-                        time = float.Parse(tags[i].properties["time"]);
+                        time = float.Parse(tags[scenarioIndex].properties["time"]);
                         time = time / 1000.0f;
                     }
-                    if (tags[i].properties.ContainsKey("key"))
+                    if (tags[scenarioIndex].properties.ContainsKey("key"))
                     {
-                        key = tags[i].properties["key"];
+                        key = tags[scenarioIndex].properties["key"];
                     }
-                    if (tags[i].properties.ContainsKey("faceKey"))
+                    if (tags[scenarioIndex].properties.ContainsKey("faceKey"))
                     {
-                        faceKey = tags[i].properties["faceKey"];
+                        faceKey = tags[scenarioIndex].properties["faceKey"];
                     }
-                    if (tags[i].properties.ContainsKey("x"))
+                    if (tags[scenarioIndex].properties.ContainsKey("x"))
                     {
-                        x = float.Parse(tags[i].properties["x"]);
+                        x = float.Parse(tags[scenarioIndex].properties["x"]);
                     }
-                    if (tags[i].properties.ContainsKey("y"))
+                    if (tags[scenarioIndex].properties.ContainsKey("y"))
                     {
-                        y = float.Parse(tags[i].properties["y"]);
+                        y = float.Parse(tags[scenarioIndex].properties["y"]);
                     }
                     yield return CRY_SOLILO.System.uiManager.ShowCaracter(key, faceKey, new Vector2(x, y), time);
                 }
-                else if (tags[i].tagName == "p")
+                else if (tags[scenarioIndex].tagName == "chara_hide")
+                {
+                    float time = 1.0f;
+                    string key = "";
+                    if (tags[scenarioIndex].properties.ContainsKey("time"))
+                    {
+                        time = float.Parse(tags[scenarioIndex].properties["time"]);
+                        time = time / 1000.0f;
+                    }
+                    if (tags[scenarioIndex].properties.ContainsKey("key"))
+                    {
+                        key = tags[scenarioIndex].properties["key"];
+                    }
+                    yield return CRY_SOLILO.System.uiManager.HideCharacter(key, time);
+                }
+                else if (tags[scenarioIndex].tagName == "chara_hide_all")
+                {
+                    float time = 1.0f;
+                    if (tags[scenarioIndex].properties.ContainsKey("time"))
+                    {
+                        time = float.Parse(tags[scenarioIndex].properties["time"]);
+                        time = time / 1000.0f;
+                    }
+                    yield return CRY_SOLILO.System.uiManager.HideAllCharacter(time);
+                }
+                else if (tags[scenarioIndex].tagName == "playbgm")
+                {
+                    string key = "";
+                    float volume = 1.0f;
+                    float pitch = 1.0f;
+                    bool loop = true;
+                    bool isFade = false;
+                    float fadeout = 0.0f;
+                    float fadewait = 0.0f;
+                    float fadein = 0.0f;
+                    if (tags[scenarioIndex].properties.ContainsKey("volume"))
+                    {
+                        volume = float.Parse(tags[scenarioIndex].properties["volume"]);
+                        volume = volume / 100.0f;
+                    }
+                    if (tags[scenarioIndex].properties.ContainsKey("pitch"))
+                    {
+                        pitch = float.Parse(tags[scenarioIndex].properties["pitch"]);
+                        pitch = pitch / 100.0f;
+                    }
+                    if (tags[scenarioIndex].properties.ContainsKey("key"))
+                    {
+                        key = tags[scenarioIndex].properties["key"];
+                    }
+                    if (tags[scenarioIndex].properties.ContainsKey("loop"))
+                    {
+                        loop = bool.Parse(tags[scenarioIndex].properties["loop"]);
+                    }
+                    if (tags[scenarioIndex].properties.ContainsKey("fadeout"))
+                    {
+                        fadeout = float.Parse(tags[scenarioIndex].properties["fadeout"]);
+                        fadeout = fadeout / 1000.0f;
+                        isFade = true;
+                    }
+                    if (tags[scenarioIndex].properties.ContainsKey("fadewait"))
+                    {
+                        fadewait = float.Parse(tags[scenarioIndex].properties["fadewait"]);
+                        fadewait = fadewait / 1000.0f;
+                        isFade = true;
+                    }
+                    if (tags[scenarioIndex].properties.ContainsKey("fadein"))
+                    {
+                        fadein = float.Parse(tags[scenarioIndex].properties["fadein"]);
+                        fadein = fadein / 1000.0f;
+                        isFade = true;
+                    }
+                    if (isFade)
+                    {
+                        CRY_SOLILO.System.audioManager.PlayBGM(key, loop, volume, pitch, fadeout, fadewait, fadein);
+                    }
+                    else
+                    {
+                        CRY_SOLILO.System.audioManager.PlayBGM(key, loop, volume, pitch);
+                    }
+                }
+                else if (tags[scenarioIndex].tagName == "stopbgm")
+                {
+                    bool isFade = false;
+                    float fadeout = 0.0f;
+                    if (tags[scenarioIndex].properties.ContainsKey("fadeout"))
+                    {
+                        fadeout = float.Parse(tags[scenarioIndex].properties["fadeout"]);
+                        fadeout = fadeout / 1000.0f;
+                        isFade = true;
+                    }
+                    if (isFade)
+                    {
+                        CRY_SOLILO.System.audioManager.StopBGM(fadeout);
+                    }
+                    else
+                    {
+                        CRY_SOLILO.System.audioManager.StopBGM();
+                    }
+                }
+                else if (tags[scenarioIndex].tagName == "playbgs")
+                {
+                    string key = "";
+                    float volume = 1.0f;
+                    float pitch = 1.0f;
+                    bool loop = true;
+                    bool isFade = false;
+                    float fadeout = 0.0f;
+                    float fadewait = 0.0f;
+                    float fadein = 0.0f;
+                    if (tags[scenarioIndex].properties.ContainsKey("volume"))
+                    {
+                        volume = float.Parse(tags[scenarioIndex].properties["volume"]);
+                        volume = volume / 100.0f;
+                    }
+                    if (tags[scenarioIndex].properties.ContainsKey("pitch"))
+                    {
+                        pitch = float.Parse(tags[scenarioIndex].properties["pitch"]);
+                        pitch = pitch / 100.0f;
+                    }
+                    if (tags[scenarioIndex].properties.ContainsKey("key"))
+                    {
+                        key = tags[scenarioIndex].properties["key"];
+                    }
+                    if (tags[scenarioIndex].properties.ContainsKey("loop"))
+                    {
+                        loop = bool.Parse(tags[scenarioIndex].properties["loop"]);
+                    }
+                    if (tags[scenarioIndex].properties.ContainsKey("fadeout"))
+                    {
+                        fadeout = float.Parse(tags[scenarioIndex].properties["fadeout"]);
+                        fadeout = fadeout / 1000.0f;
+                        isFade = true;
+                    }
+                    if (tags[scenarioIndex].properties.ContainsKey("fadewait"))
+                    {
+                        fadewait = float.Parse(tags[scenarioIndex].properties["fadewait"]);
+                        fadewait = fadewait / 1000.0f;
+                        isFade = true;
+                    }
+                    if (tags[scenarioIndex].properties.ContainsKey("fadein"))
+                    {
+                        fadein = float.Parse(tags[scenarioIndex].properties["fadein"]);
+                        fadein = fadein / 1000.0f;
+                        isFade = true;
+                    }
+                    if (isFade)
+                    {
+                        CRY_SOLILO.System.audioManager.PlayBGS(key, loop, volume, pitch, fadeout, fadewait, fadein);
+                    }
+                    else
+                    {
+                        CRY_SOLILO.System.audioManager.PlayBGS(key, loop, volume, pitch);
+                    }
+                }
+                else if (tags[scenarioIndex].tagName == "stopbgs")
+                {
+                    bool isFade = false;
+                    float fadeout = 0.0f;
+                    if (tags[scenarioIndex].properties.ContainsKey("fadeout"))
+                    {
+                        fadeout = float.Parse(tags[scenarioIndex].properties["fadeout"]);
+                        fadeout = fadeout / 1000.0f;
+                        isFade = true;
+                    }
+                    if (isFade)
+                    {
+                        CRY_SOLILO.System.audioManager.StopBGS(fadeout);
+                    }
+                    else
+                    {
+                        CRY_SOLILO.System.audioManager.StopBGS();
+                    }
+                }
+                else if (tags[scenarioIndex].tagName == "playse")
+                {
+                    string key = "";
+                    int buf = 0;
+                    float volume = 1.0f;
+                    float pitch = 1.0f;
+                    bool loop = false;
+                    if (tags[scenarioIndex].properties.ContainsKey("buf"))
+                    {
+                        buf = int.Parse(tags[scenarioIndex].properties["buf"]);
+                    }
+                    if (tags[scenarioIndex].properties.ContainsKey("volume"))
+                    {
+                        volume = float.Parse(tags[scenarioIndex].properties["volume"]);
+                        volume = volume / 100.0f;
+                    }
+                    if (tags[scenarioIndex].properties.ContainsKey("pitch"))
+                    {
+                        pitch = float.Parse(tags[scenarioIndex].properties["pitch"]);
+                        pitch = pitch / 100.0f;
+                    }
+                    if (tags[scenarioIndex].properties.ContainsKey("key"))
+                    {
+                        key = tags[scenarioIndex].properties["key"];
+                    }
+                    if (tags[scenarioIndex].properties.ContainsKey("loop"))
+                    {
+                        loop = bool.Parse(tags[scenarioIndex].properties["loop"]);
+                    }
+                    CRY_SOLILO.System.audioManager.PlaySE(key, buf, loop, volume, pitch);
+                }
+
+                else if (tags[scenarioIndex].tagName == "stopse")
+                {
+                    int buf = 0;
+                    if (tags[scenarioIndex].properties.ContainsKey("buf"))
+                    {
+                        buf = int.Parse(tags[scenarioIndex].properties["buf"]);
+                    }
+                    CRY_SOLILO.System.audioManager.StopSE(buf);
+                }
+
+                else if (tags[scenarioIndex].tagName == "p")
                 {
                     while (true)
                     {
@@ -335,10 +555,14 @@ namespace CrySolilo
                             CRY_SOLILO.System.uiManager.ClearText();
                             break;
                         }
+                        if (scenarioIndex != scenarioIndexCache)
+                        {
+                            break;
+                        }
                         yield return null;
                     }
                 }
-                else if (tags[i].tagName == "s")
+                else if (tags[scenarioIndex].tagName == "s")
                 {
                     while (true)
                     {
@@ -346,10 +570,14 @@ namespace CrySolilo
                         {
                             CRY_SOLILO.System.uiManager.ClearText();
                         }
+                        if (scenarioIndex != scenarioIndexCache)
+                        {
+                            break;
+                        }
                         yield return null;
                     }
                 }
-                else if (tags[i].tagName == "l")
+                else if (tags[scenarioIndex].tagName == "l")
                 {
                     while (true)
                     {
@@ -357,41 +585,61 @@ namespace CrySolilo
                         {
                             break;
                         }
+                        if (scenarioIndex != scenarioIndexCache)
+                        {
+                            break;
+                        }
                         yield return null;
                     }
                 }
-                else if (tags[i].tagName == "r")
+                else if (tags[scenarioIndex].tagName == "r")
                 {
                     yield return CRY_SOLILO.System.uiManager.ShowText('\n'.ToString(), true);
                 }
-                else if (tags[i].tagName == "wait")
+                else if (tags[scenarioIndex].tagName == "wait")
                 {
                     float time = 0f;
-                    if (tags[i].properties.ContainsKey("time"))
+                    if (tags[scenarioIndex].properties.ContainsKey("time"))
                     {
-                        time = float.Parse(tags[i].properties["time"]);
+                        time = float.Parse(tags[scenarioIndex].properties["time"]);
                         time = time / 1000.0f;
                     }
                     yield return new WaitForSeconds(time);
                 }
-                else if (tags[i].tagName == "jump")
+                else if (tags[scenarioIndex].tagName == "jump")
                 {
                     string target = "";
-                    if (tags[i].properties.ContainsKey("target"))
+                    if (tags[scenarioIndex].properties.ContainsKey("target"))
                     {
-                        target = tags[i].properties["target"];
+                        target = tags[scenarioIndex].properties["target"];
                     }
                     if (labelIndexDict.ContainsKey(target))
                     {
-                        i = labelIndexDict[target];
+                        scenarioIndex = labelIndexDict[target];
                     }
                 }
 
                 yield return null;
+                scenarioIndex++;
+                scenarioIndexCache = scenarioIndex;
             }
 
-            StopCoroutine(coro);
+            StopCoroutine(skipCoro);
             yield break;
+        }
+
+        public void StopScenario()
+        {
+            StopCoroutine(skipCoro);
+            StopCoroutine(executeCoro);
+        }
+
+        public void Jump(string target)
+        {
+            if (labelIndexDict.ContainsKey(target))
+            {
+                scenarioIndex = labelIndexDict[target];
+            }
         }
 
         private IEnumerator SkipTextIE()

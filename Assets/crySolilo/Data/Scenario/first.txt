@@ -14,8 +14,8 @@
 [chara_show key="solilo" faceKey="normal" time=1000 x=200]
 #Solilo
 こんにちは。[p]
+*hoge
 私はSolilo。[p]
-[jump target="moge"]
 [chara_show key="solilo" faceKey="happy" time=1000 x=200]
 おはぎおはぎおはぎおはぎおはぎ！[p]
 私のおはぎが消えた。[r][l]
@@ -24,6 +24,7 @@
 [chara_show key="solilo" faceKey="normal" time=1000 x=200]
 たまらなく煮えたぎる甘味。[r][l]
 みんなどこへ消えた...[p]
+[chara_hide_all time=1000]
 [chara_show key="solilo" faceKey="doki" time=1000 x=200]
 またそういうこと言うの？[r]
 バイタルたけえなあおい。[r]

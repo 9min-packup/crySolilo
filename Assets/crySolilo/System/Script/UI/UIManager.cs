@@ -208,6 +208,49 @@ namespace CrySolilo
             return uichara.charaCoro;
         }
 
+        public Coroutine HideAllCharacter(float time = 1.0f)
+        {
+            UICharacter uichara = null;
+            foreach (var pair in uicharaDict)
+            {
+                uichara = pair.Value;
+                if (uichara.charaCoro != null)
+                {
+                    StopCoroutine(uichara.charaCoro);
+                    if (uichara.charaBack != null)
+                    {
+                        Destroy(uichara.charaBack.gameObject);
+                        uichara.charaBack = null;
+                        uichara.charaImageBack = null;
+                    }
+                    uichara.charaCoro = null;
+                }
+                if (uichara.charaFore == null)
+                {
+                    return null;
+                }
+                uichara.charaCoro = TweenUI.Fade(this, uichara.charaImageFore, new Color(1.0f, 1.0f, 1.0f, 1.0f), new Color(1.0f, 1.0f, 1.0f, 0.0f), time, 0.0f, () =>
+                {
+                    if (uichara.charaFore != null)
+                    {
+                        Destroy(uichara.charaFore.gameObject);
+                        uichara.charaFore = null;
+                        uichara.charaImageFore = null;
+                        uichara.charaCoro = null;
+                    }
+                });
+            }
+            if (uichara == null)
+            {
+                return null;
+            }
+            else
+            {
+                return uichara.charaCoro;
+            }
+        }
+
+
         public void ShowTextBox()
         {
             if (uiText.textBaseRect != null)
@@ -375,6 +418,15 @@ namespace CrySolilo
             public RectTransform charaFore, charaBack;
             public Image charaImageFore, charaImageBack;
             public Coroutine charaCoro;
+        }
+
+        public class UIButton
+        {
+            public Vector2 position;
+            public RectTransform buttonBaseRect, textRect;
+            public Image buttonImage;
+            public Button button;
+            public Text text;
         }
 
         public class UIText

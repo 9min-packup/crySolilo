@@ -145,18 +145,6 @@ namespace CrySolilo
             Play(SE_Speakers[index], audioClip, isLoop, volume, pitch);
         }
 
-        public void StopSE()
-        {
-            int index = 0;
-            if (index < 0 || index >= SE_Speakers.Length)
-            {
-                Debug.LogWarning("SE Speakers is empty.  ");
-            }
-
-            Stop(SE_Speakers[index]);
-        }
-
-
         public void StopSE(int index)
         {
             if (index < 0 || index >= SE_Speakers.Length)

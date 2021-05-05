@@ -10,7 +10,12 @@ namespace CrySolilo
         [SerializeField]
         public BgDataItem[] bgList;
         [SerializeField]
+        public ButtonDataItem[] buttonList;
+        [SerializeField]
         public CharacterDataItem[] characterList;
+
+
+
     }
 
     [System.Serializable]
@@ -40,4 +45,12 @@ namespace CrySolilo
         public string key;
         public Sprite bg;
     }
+
+    [System.Serializable]
+    public class ButtonDataItem
+    {
+        public string key;
+        public Sprite button;
+    }
+
 }

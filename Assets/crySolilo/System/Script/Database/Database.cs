@@ -10,6 +10,7 @@ namespace CrySolilo
         private Dictionary<string, int> bgs = new Dictionary<string, int>();
         private Dictionary<string, int> se = new Dictionary<string, int>();
         private Dictionary<string, int> bg = new Dictionary<string, int>();
+        private Dictionary<string, int> button = new Dictionary<string, int>();
         private Dictionary<string, int> character = new Dictionary<string, int>();
         private Dictionary<string, Dictionary<string, int>> characterFace = new Dictionary<string, Dictionary<string, int>>();
         private Dictionary<string, int> font = new Dictionary<string, int>();
@@ -41,6 +42,10 @@ namespace CrySolilo
             for (int i = 0; i < imageDatabase.bgList.Length; i++)
             {
                 bg.Add(imageDatabase.bgList[i].key, i);
+            }
+            for (int i = 0; i < imageDatabase.buttonList.Length; i++)
+            {
+                button.Add(imageDatabase.buttonList[i].key, i);
             }
             for (int i = 0; i < imageDatabase.characterList.Length; i++)
             {
@@ -143,6 +148,26 @@ namespace CrySolilo
                 return null;
             }
             return imageDatabase.bgList[index].bg;
+        }
+
+        public Sprite GetButton(string key)
+        {
+            int index = 0;
+            if (button.ContainsKey(key))
+            {
+                index = button[key];
+            }
+            else
+            {
+                Debug.LogWarning("Button Database: Key " + key + " Not Found");
+                return null;
+            }
+            if (index < 0 || index >= imageDatabase.buttonList.Length)
+            {
+                Debug.LogWarning("Button Database: Index " + index + " Out Of bounds");
+                return null;
+            }
+            return imageDatabase.buttonList[index].button;
         }
 
         public CharacterData GetCharacter(string key)
