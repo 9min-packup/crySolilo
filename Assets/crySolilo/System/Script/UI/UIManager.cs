@@ -229,20 +229,35 @@ namespace CrySolilo
             rectTransformText.anchorMin = Vector2.zero;
             rectTransformText.anchorMax = Vector2.one;
             rectTransformText.sizeDelta = CRY_SOLILO.System.settingManager.setting.textSizeDelta;
-            rectTransformText.localPosition = Vector2.zero;
+            rectTransformText.localPosition = CRY_SOLILO.System.settingManager.setting.textSizePosition;
             Text text = objText.AddComponent<Text>();
             text.text = "";
             text.fontSize = CRY_SOLILO.System.settingManager.setting.defaultFontSize;
+
+            GameObject objName = new GameObject("Text");
+            objName.transform.SetParent(rectTransform);
+            RectTransform rectTransformName = objName.AddComponent<RectTransform>();
+            rectTransformName.anchorMin = Vector2.zero;
+            rectTransformName.anchorMax = Vector2.one;
+            rectTransformName.sizeDelta = CRY_SOLILO.System.settingManager.setting.nameSizeDelta;
+            rectTransformName.localPosition = CRY_SOLILO.System.settingManager.setting.nameSizePosition;
+            Text name = objName.AddComponent<Text>();
+            name.text = "";
+            name.fontSize = CRY_SOLILO.System.settingManager.setting.defaultNameFontSize;
             Font font = CRY_SOLILO.System.database.GetFont(CRY_SOLILO.System.settingManager.setting.defaultFontKey);
             if (font != null)
             {
                 text.font = font;
+                name.font = font;
             }
             text.color = CRY_SOLILO.System.settingManager.setting.defaultFontColor;
+            name.color = CRY_SOLILO.System.settingManager.setting.defaultFontColor;
             uiText.textBaseRect = rectTransform;
             uiText.textBaseImage = image;
             uiText.textRect = rectTransformText;
             uiText.text = text;
+            uiText.nameRect = rectTransformName;
+            uiText.name = name;
         }
 
         public void HideTextBox()
@@ -256,6 +271,8 @@ namespace CrySolilo
             uiText.textBaseImage = null;
             uiText.textRect = null;
             uiText.text = null;
+            uiText.nameRect = null;
+            uiText.name = null;
         }
 
         public Coroutine ShowText(string str, bool add = false)
@@ -283,6 +300,15 @@ namespace CrySolilo
             {
                 uiText.isTextSkip = true;
             }
+        }
+
+        public void ShowName(string name)
+        {
+            if (uiText.name == null)
+            {
+                return;
+            }
+            uiText.name.text = name;
         }
 
         private IEnumerator ShowTextIE(string str, bool add)
@@ -358,6 +384,8 @@ namespace CrySolilo
             public int textSpeed = 20;
             public RectTransform textRect;
             public Text text;
+            public RectTransform nameRect;
+            public Text name;
             public bool isTextSkip = false;
             public bool isTextShowing = false;
             public float skipAbleTime = 0.0f;

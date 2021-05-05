@@ -8,8 +8,15 @@ namespace CrySolilo
     public class ScenarioManager : MonoBehaviour
     {
         public Tag[] tags;
+        public Dictionary<string, int> labelIndexDict = new Dictionary<string, int>();
 
         private bool waitForSubmit = false;
+
+        private void Start()
+        {
+            LoadScenario(CRY_SOLILO.System.settingManager.setting.firstScenarioKey);
+            ExecuteScenario();
+        }
 
         public void LoadScenario(string key)
         {
@@ -22,6 +29,7 @@ namespace CrySolilo
             char[] scenarioArray = textAsset.text.ToCharArray();
             StringBuilder strB = new StringBuilder(128);
             List<Tag> tagList = new List<Tag>();
+            labelIndexDict = new Dictionary<string, int>();
             Mode mode = Mode.None;
             char c;
             bool underBar = false;
@@ -49,6 +57,12 @@ namespace CrySolilo
                     else if (c == ';')
                     {
                         mode = Mode.Comment;
+                        underBar = false;
+                        rt = false;
+                    }
+                    else if (c == '*')
+                    {
+                        mode = Mode.Label;
                         underBar = false;
                         rt = false;
                     }
@@ -146,6 +160,23 @@ namespace CrySolilo
                         underBar = false;
                         rt = false;
                     }
+                    else if (c == '*')
+                    {
+                        if (rt)
+                        {
+                            Tag tag = Tag.CreateTextTag(strB.ToString());
+                            tagList.Add(tag);
+                            strB.Clear();
+                            strB.Append(c);
+                            mode = Mode.Label;
+                        }
+                        else
+                        {
+                            strB.Append(c);
+                        }
+                        underBar = false;
+                        rt = false;
+                    }
                     else if (c == '[')
                     {
                         underBar = false;
@@ -176,6 +207,21 @@ namespace CrySolilo
                     {
                         Tag tag = Tag.CreateNameTag(strB.ToString());
                         tagList.Add(tag);
+                        strB.Clear();
+                        mode = Mode.None;
+                    }
+                    else
+                    {
+                        strB.Append(c);
+                    }
+                }
+                else if (mode == Mode.Label)
+                {
+                    if (c == '\n')
+                    {
+                        Tag tag = Tag.CreateLabelTag(strB.ToString());
+                        tagList.Add(tag);
+                        labelIndexDict.Add(tag.properties["val"], tagList.Count - 1);
                         strB.Clear();
                         mode = Mode.None;
                     }
@@ -222,6 +268,11 @@ namespace CrySolilo
                 {
                     yield return CRY_SOLILO.System.uiManager.ShowText(tags[i].properties["val"], true);
                 }
+                else if (tags[i].tagName == "name")
+                {
+                    CRY_SOLILO.System.uiManager.ShowName(tags[i].properties["val"]);
+                }
+
                 else if (tags[i].tagName == "bg")
                 {
                     float time = 0;
@@ -289,9 +340,12 @@ namespace CrySolilo
                 }
                 else if (tags[i].tagName == "s")
                 {
-                    CRY_SOLILO.System.uiManager.ClearText();
                     while (true)
                     {
+                        if (CRY_SOLILO.System.inputManager.submit)
+                        {
+                            CRY_SOLILO.System.uiManager.ClearText();
+                        }
                         yield return null;
                     }
                 }
@@ -320,6 +374,18 @@ namespace CrySolilo
                     }
                     yield return new WaitForSeconds(time);
                 }
+                else if (tags[i].tagName == "jump")
+                {
+                    string target = "";
+                    if (tags[i].properties.ContainsKey("target"))
+                    {
+                        target = tags[i].properties["target"];
+                    }
+                    if (labelIndexDict.ContainsKey(target))
+                    {
+                        i = labelIndexDict[target];
+                    }
+                }
 
                 yield return null;
             }
@@ -344,6 +410,7 @@ namespace CrySolilo
         {
             None,
             Comment,
+            Label,
             Text,
             Name,
             Tag

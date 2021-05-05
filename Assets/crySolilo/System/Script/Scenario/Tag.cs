@@ -74,12 +74,20 @@ namespace CrySolilo
         public static Tag CreateNameTag(string str)
         {
             Tag tag = new Tag();
-            tag.tagName = "ame";
+            tag.tagName = "name";
             char[] splitChars = { '#', '\n' };
             tag.properties.Add("val", str.Trim(splitChars));
             return tag;
         }
 
+        public static Tag CreateLabelTag(string str)
+        {
+            Tag tag = new Tag();
+            tag.tagName = "label";
+            char[] splitChars = { '*', '\n' };
+            tag.properties.Add("val", str.Trim(splitChars));
+            return tag;
+        }
 
         [System.Serializable]
         public class TagProperty

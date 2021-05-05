@@ -6,17 +6,25 @@
 [wait time=1000]
 [bg key="bg" time=1000]
 [message_show]
-[chara_show key="crySolilo" faceKey="normal" time=1000]
-#crySolilo
+*moge
+[chara_show key="cry" faceKey="normal" time=1000 x=-200]
+#Cry
 こんにちは。[p]
-私はcrySolilo。[p]
+私はCry。[p]
+[chara_show key="solilo" faceKey="normal" time=1000 x=200]
+#Solilo
+こんにちは。[p]
+私はSolilo。[p]
+[jump target="moge"]
+[chara_show key="solilo" faceKey="happy" time=1000 x=200]
 おはぎおはぎおはぎおはぎおはぎ！[p]
 私のおはぎが消えた。[r][l]
+[chara_show key="solilo" faceKey="angry" time=1000 x=200]
 いったいどこへ消えたんだ！！[p]
-
+[chara_show key="solilo" faceKey="normal" time=1000 x=200]
 たまらなく煮えたぎる甘味。[r][l]
 みんなどこへ消えた...[p]
-
+[chara_show key="solilo" faceKey="doki" time=1000 x=200]
 またそういうこと言うの？[r]
 バイタルたけえなあおい。[r]
 うまうまだ。[r]

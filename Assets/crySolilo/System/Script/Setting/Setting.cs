@@ -16,6 +16,8 @@ namespace CrySolilo
         [SerializeField]
         public int defaultFontSize = 28;
         [SerializeField]
+        public int defaultNameFontSize = 28;
+        [SerializeField]
         public Color defaultFontColor = Color.white;
         [SerializeField]
         public Vector2 textBoxSizeDelta = new Vector2(-100, -400);
@@ -23,5 +25,11 @@ namespace CrySolilo
         public Vector2 textBoxPosition = new Vector2(0, -150);
         [SerializeField]
         public Vector2 textSizeDelta = new Vector2(-20, -30);
+        [SerializeField]
+        public Vector2 textSizePosition = new Vector2(0, 0);
+        [SerializeField]
+        public Vector2 nameSizeDelta = new Vector2(0, 0);
+        [SerializeField]
+        public Vector2 nameSizePosition = new Vector2(0, 0);
     }
 }
