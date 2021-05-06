@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using CrySolilo;
 
 public class Test : MonoBehaviour
@@ -13,6 +14,15 @@ public class Test : MonoBehaviour
     public string textTagString;
     public string nameTagString;
     public string jumpTarget;
+    [Space]
+    public string buttonKey;
+    public Vector2 buttonPosition;
+    public Vector2 buttonSize;
+    public Color buttonfontColor;
+    public int buttonFontSize;
+    public bool buttonNativeSize = false;
+    public string buttonText;
+    public string buttonEnterKey;
 
     [TextArea]
     public string text;
@@ -149,6 +159,13 @@ public class Test : MonoBehaviour
         CRY_SOLILO.System.scenarioManager.Jump(jumpTarget);
     }
 
+    [ContextMenu("Create Button")]
+    public void CreateButton()
+    {
+        Button.ButtonClickedEvent e = new Button.ButtonClickedEvent();
+        e.AddListener(() => { Debug.Log("おはよう！"); });
 
+        CRY_SOLILO.System.uiManager.CreateButton(buttonKey, buttonPosition, buttonSize, buttonfontColor, buttonFontSize, buttonNativeSize, buttonText, buttonEnterKey, e);
+    }
 
 }

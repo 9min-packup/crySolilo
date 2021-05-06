@@ -8,11 +8,11 @@ namespace CrySolilo
 
     public class UIManager : MonoBehaviour
     {
-        public RectTransform bgParent, charaParent, textParent;
+        public RectTransform bgParent, charaParent, textParent, ButtonParent;
         private UIBg uibg = new UIBg();
         private Dictionary<string, UICharacter> uicharaDict = new Dictionary<string, UICharacter>();
         private UIText uiText = new UIText();
-        public float pH, sdy;
+        private List<UIButton> buttonList = new List<UIButton>();
 
         public Coroutine ShowBg(string key, float time = 1.0f)
         {
@@ -174,6 +174,7 @@ namespace CrySolilo
             if (uicharaDict.ContainsKey(key))
             {
                 uichara = uicharaDict[key];
+                uicharaDict.Remove(key);
             }
             else
             {
@@ -240,6 +241,7 @@ namespace CrySolilo
                     }
                 });
             }
+            uicharaDict.Clear();
             if (uichara == null)
             {
                 return null;
@@ -277,7 +279,7 @@ namespace CrySolilo
             text.text = "";
             text.fontSize = CRY_SOLILO.System.settingManager.setting.defaultFontSize;
 
-            GameObject objName = new GameObject("Text");
+            GameObject objName = new GameObject("Name");
             objName.transform.SetParent(rectTransform);
             RectTransform rectTransformName = objName.AddComponent<RectTransform>();
             rectTransformName.anchorMin = Vector2.zero;
@@ -373,10 +375,6 @@ namespace CrySolilo
             }
             for (int count = startCount; count <= showString.Length; count++)
             {
-
-                pH = uiText.text.preferredHeight;
-                sdy = uiText.text.rectTransform.rect.height;
-
                 if (uiText.text != null)
                 {
                     uiText.text.text = showString.Substring(0, count);
@@ -400,6 +398,85 @@ namespace CrySolilo
             yield break;
         }
 
+
+        public void CreateButton(string key, Vector2 position, Vector2 size, Color fontColor, int fontSize, bool autoAjustSize = true, string str = null, string enterKey = null, Button.ButtonClickedEvent clickedEvent = null)
+        {
+            Sprite buttonSprite = CRY_SOLILO.System.database.GetButton(key);
+            Sprite buttonHSprite = null;
+            if (enterKey != null)
+            {
+                buttonHSprite = CRY_SOLILO.System.database.GetButton(enterKey);
+            }
+            UIButton uibutton = new UIButton();
+
+            GameObject objButtonBase = new GameObject("ButtonBase");
+            objButtonBase.transform.SetParent(ButtonParent);
+            RectTransform rectTransform = objButtonBase.AddComponent<RectTransform>();
+            rectTransform.anchorMin = Vector2.one * 0.5f;
+            rectTransform.anchorMax = Vector2.one * 0.5f;
+            rectTransform.sizeDelta = size;
+            rectTransform.localPosition = position;
+            Image image = objButtonBase.AddComponent<Image>();
+            image.color = Color.white;
+            image.sprite = buttonSprite;
+            image.type = Image.Type.Sliced;
+            if (autoAjustSize)
+            {
+                image.SetNativeSize();
+            }
+            Button button = objButtonBase.AddComponent<Button>();
+            button.targetGraphic = image;
+            button.transition = Selectable.Transition.SpriteSwap;
+            SpriteState spriteState = new SpriteState();
+            spriteState.highlightedSprite = buttonHSprite;
+            button.spriteState = spriteState;
+            button.onClick = clickedEvent;
+
+            GameObject objText = new GameObject("Text");
+            objText.transform.SetParent(rectTransform);
+            RectTransform rectTransformText = null;
+            Text text = null;
+            if (str != null)
+            {
+                rectTransformText = objText.AddComponent<RectTransform>();
+                rectTransformText.anchorMin = Vector2.zero;
+                rectTransformText.anchorMax = Vector2.one;
+                rectTransformText.sizeDelta = Vector2.zero;
+                rectTransformText.localPosition = Vector2.zero;
+                text = objText.AddComponent<Text>();
+                text.text = str;
+                text.fontSize = fontSize;
+                Font font = CRY_SOLILO.System.database.GetFont(CRY_SOLILO.System.settingManager.setting.defaultFontKey);
+                if (font != null)
+                {
+                    text.font = font;
+                }
+                text.color = fontColor;
+                text.alignment = TextAnchor.MiddleCenter;
+                if (autoAjustSize)
+                {
+                    Vector2 margin = CRY_SOLILO.System.settingManager.setting.buttonMargin;
+                    rectTransform.sizeDelta = new Vector2(text.preferredWidth + margin.x, text.preferredHeight + margin.y);
+                    rectTransform.sizeDelta = new Vector2(text.preferredWidth + margin.x, text.preferredHeight + margin.y);
+                }
+            }
+            uibutton.buttonBaseRect = rectTransform;
+            uibutton.position = position;
+            uibutton.buttonImage = image;
+            uibutton.textRect = rectTransformText;
+            uibutton.text = text;
+            uibutton.button = button;
+            buttonList.Add(uibutton);
+        }
+
+        public void ClearAllButton()
+        {
+            foreach (var uiButton in buttonList)
+            {
+                Destroy(uiButton.buttonBaseRect.gameObject);
+            }
+            buttonList.Clear();
+        }
 
         public class UIBg
         {

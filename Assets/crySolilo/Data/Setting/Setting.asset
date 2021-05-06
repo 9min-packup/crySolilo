@@ -24,3 +24,4 @@ MonoBehaviour:
   textSizePosition: {x: 0, y: -30}
   nameSizeDelta: {x: -20, y: -30}
   nameSizePosition: {x: 0, y: 0}
+  buttonMargin: {x: 80, y: 30}

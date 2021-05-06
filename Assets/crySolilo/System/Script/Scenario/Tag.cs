@@ -89,6 +89,22 @@ namespace CrySolilo
             return tag;
         }
 
+        public static Color ParseToColor(string str)
+        {
+            Color color = Color.black;
+            char[] splitChars = { 'x' };
+            string[] colorStr = str.Split(splitChars);
+            if (colorStr.Length >= 2 && colorStr[1].Length == 6)
+            {
+
+                float r = (Convert.ToInt32(colorStr[1].Substring(0, 2), 16)) / 256f;
+                float g = (Convert.ToInt32(colorStr[1].Substring(2, 2), 16)) / 256f;
+                float b = (Convert.ToInt32(colorStr[1].Substring(4, 2), 16)) / 256f;
+                color = new Color(r, g, b);
+            }
+            return color;
+        }
+
         [System.Serializable]
         public class TagProperty
         {

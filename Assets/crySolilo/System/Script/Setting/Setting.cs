@@ -31,5 +31,7 @@ namespace CrySolilo
         public Vector2 nameSizeDelta = new Vector2(0, 0);
         [SerializeField]
         public Vector2 nameSizePosition = new Vector2(0, 0);
+        [SerializeField]
+        public Vector2 buttonMargin = new Vector2(20f, 10f);
     }
 }

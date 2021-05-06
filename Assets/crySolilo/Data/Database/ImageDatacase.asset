@@ -19,7 +19,15 @@ MonoBehaviour:
     bg: {fileID: 21300000, guid: 0e4e2ff02face4ba490d228e97d59225, type: 3}
   buttonList:
   - key: default
+    button: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  - key: button
     button: {fileID: 21300000, guid: cb14152dbec1947a4883157b85b6f203, type: 3}
+  - key: button_enter
+    button: {fileID: 21300000, guid: 3fd0d01ab4d394cd98b5c0bbfdb81258, type: 3}
+  - key: start
+    button: {fileID: 21300000, guid: ac2b71e3015cd4bee833ddb96cc3dfe6, type: 3}
+  - key: start_enter
+    button: {fileID: 21300000, guid: ee0651756269145cbb643a90df48a955, type: 3}
   characterList:
   - key: solilo
     characterData:

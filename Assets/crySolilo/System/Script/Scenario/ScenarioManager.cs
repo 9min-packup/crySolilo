@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace CrySolilo
 {
@@ -535,7 +536,6 @@ namespace CrySolilo
                     }
                     CRY_SOLILO.System.audioManager.PlaySE(key, buf, loop, volume, pitch);
                 }
-
                 else if (tags[scenarioIndex].tagName == "stopse")
                 {
                     int buf = 0;
@@ -544,6 +544,68 @@ namespace CrySolilo
                         buf = int.Parse(tags[scenarioIndex].properties["buf"]);
                     }
                     CRY_SOLILO.System.audioManager.StopSE(buf);
+                }
+
+                else if (tags[scenarioIndex].tagName == "button")
+                {
+                    string graphic = "";
+                    float x = 0.0f;
+                    float y = 0.0f;
+                    float width = 100.0f;
+                    float height = 40.0f;
+                    Color color = CRY_SOLILO.System.settingManager.setting.defaultFontColor;
+                    int fontSize = CRY_SOLILO.System.settingManager.setting.defaultFontSize;
+                    bool autoAjustSize = true;
+                    string text = null;
+                    string enterimg = null;
+                    string target = null;
+                    Button.ButtonClickedEvent clickedEvent = new Button.ButtonClickedEvent();
+
+                    if (tags[scenarioIndex].properties.ContainsKey("graphic"))
+                    {
+                        graphic = tags[scenarioIndex].properties["graphic"];
+                    }
+                    if (tags[scenarioIndex].properties.ContainsKey("x"))
+                    {
+                        x = float.Parse(tags[scenarioIndex].properties["x"]);
+                    }
+                    if (tags[scenarioIndex].properties.ContainsKey("y"))
+                    {
+                        y = float.Parse(tags[scenarioIndex].properties["y"]);
+                    }
+                    if (tags[scenarioIndex].properties.ContainsKey("width"))
+                    {
+                        width = float.Parse(tags[scenarioIndex].properties["width"]);
+                        autoAjustSize = false;
+                    }
+                    if (tags[scenarioIndex].properties.ContainsKey("height"))
+                    {
+                        height = float.Parse(tags[scenarioIndex].properties["height"]);
+                        autoAjustSize = false;
+                    }
+                    if (tags[scenarioIndex].properties.ContainsKey("color"))
+                    {
+                        color = Tag.ParseToColor(tags[scenarioIndex].properties["color"]);
+                    }
+                    if (tags[scenarioIndex].properties.ContainsKey("text"))
+                    {
+                        text = tags[scenarioIndex].properties["text"];
+                    }
+                    if (tags[scenarioIndex].properties.ContainsKey("enterimg"))
+                    {
+                        enterimg = tags[scenarioIndex].properties["enterimg"];
+                    }
+                    if (tags[scenarioIndex].properties.ContainsKey("target"))
+                    {
+                        target = tags[scenarioIndex].properties["target"];
+                    }
+                    clickedEvent.AddListener(() =>
+                    {
+                        Jump(target);
+                        CRY_SOLILO.System.uiManager.ClearAllButton();
+                    });
+                    CRY_SOLILO.System.uiManager.CreateButton(graphic, new Vector2(x, y), new Vector2(width, height), color, fontSize, autoAjustSize, text, enterimg, clickedEvent);
+
                 }
 
                 else if (tags[scenarioIndex].tagName == "p")
@@ -636,9 +698,17 @@ namespace CrySolilo
 
         public void Jump(string target)
         {
+            if (target == null)
+            {
+                return;
+            }
             if (labelIndexDict.ContainsKey(target))
             {
                 scenarioIndex = labelIndexDict[target];
+            }
+            else
+            {
+                Debug.LogWarning("Label: target " + target + " Not Found");
             }
         }
 
