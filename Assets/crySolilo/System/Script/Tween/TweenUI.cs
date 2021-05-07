@@ -42,6 +42,41 @@ namespace CrySolilo
             yield break;
         }
 
+        public static Coroutine Rotate(MonoBehaviour behaviour, Image image, float from, float to, float t, float firstWait, Tween.OnTweekEnd action = null, bool inRealTime = false)
+        {
+            return behaviour.StartCoroutine(RotateIE(image, from, to, t, firstWait, action, inRealTime));
+        }
+
+        private static IEnumerator RotateIE(Image image, float from, float to, float t, float firstWait, Tween.OnTweekEnd action, bool inRealTime)
+        {
+            if (inRealTime)
+            {
+                yield return new WaitForSecondsRealtime(firstWait);
+
+            }
+            else
+            {
+                yield return new WaitForSeconds(firstWait);
+            }
+            float startTimer = GetNowTime(inRealTime);
+            float time = 0.0f;
+            if (t > 0.0f)
+            {
+                while (time <= t)
+                {
+                    image.rectTransform.rotation = Quaternion.Euler(0f, 0f, from + ((to - from) * (time / t)));
+                    time = GetNowTime(inRealTime) - startTimer;
+                    yield return null;
+                }
+            }
+            image.rectTransform.rotation = Quaternion.Euler(0f, 0f, to);
+            if (action != null)
+            {
+                action();
+            }
+            yield break;
+        }
+
         public static Coroutine ClossFade(MonoBehaviour behaviour, Image imageA, Image imageB, Color from, Color to, float t, float firstWait, Tween.OnTweekEnd action = null, bool inRealTime = false)
         {
             return behaviour.StartCoroutine(ClossFadeFadeIE(imageA, imageB, from, to, t, firstWait, action, inRealTime));

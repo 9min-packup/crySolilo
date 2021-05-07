@@ -41,6 +41,14 @@ MonoBehaviour:
         face: {fileID: 21300000, guid: 16a5fa8d80efc4e9cbc88db6bda07473, type: 3}
       - key: doki
         face: {fileID: 21300000, guid: a323b47bf2c9d468d9704690db1e184b, type: 3}
+      - key: normal_red
+        face: {fileID: 21300000, guid: 546831f40d5d142128d4035b7a856689, type: 3}
+      - key: happy_red
+        face: {fileID: 21300000, guid: d6fe0709d81344fbbbeafefd6d0668d6, type: 3}
+      - key: angry_red
+        face: {fileID: 21300000, guid: 352ee4564e865497c9e8373503e6c1ba, type: 3}
+      - key: doki_red
+        face: {fileID: 21300000, guid: c4c9254f6b2ff45d7b58670d141dc14d, type: 3}
   - key: cry
     characterData:
       defaultFaceKey: normal

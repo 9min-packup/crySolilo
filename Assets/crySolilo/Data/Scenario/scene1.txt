@@ -53,7 +53,42 @@
 
 [chara_show key="cry" faceKey="happy" time=500 x=-200]   
 #Cry
-お、やったぁ！ありがとう[p]
+お、やったぁ！ありがとう！[p]
+
+[chara_show key="solilo" faceKey="doki" time=500 x=200]
+#Solilo
+えーCryを選ぶんだー。[p]
+
+[chara_show key="cry" faceKey="normal" time=500 x=-200]   
+#Cry
+いいじゃないか。あなた、みる目があるね。[p]
+
+[chara_show key="cry" faceKey="doki" time=500 x=-200]   
+#Cry
+で、私が選ばれたら。どうなるんだ？[p]
+
+
+[chara_show key="solilo" faceKey="normal" time=500 x=200]
+#Solilo
+えーっとねー。[p]
+
+[chara_show key="solilo" faceKey="happy" time=500 x=200]
+#Solilo
+回転します。[p]
+
+#Cry
+...え？[p]
+
+[chara_rotate key="cry" from=0 to=3600 time=5000]
+
+#Cry
+
+[chara_show key="solilo" faceKey="normal" time=500 x=200]
+#Solilo
+ふふ。それだけ。[p]
+
+#Cry
+ふらふらする...[p]
 
 [jump target="end"]
 
@@ -63,12 +98,80 @@
 #Solilo
 やったぜ！いえい！[p]
 
+[chara_show key="cry" faceKey="doki" time=500 x=-200]   
+#Cry
+あーSoliloを選んだなー？[p]
+
+[chara_show key="solilo" faceKey="normal" time=500 x=200]
+#Solilo
+ふっふっふー。日頃の行いがよいからですよ！[p]
+
+#Cry
+（それはあまりかんけーない気がするが）[p]
+
+[chara_show key="solilo" faceKey="doki" time=500 x=200]
+#Solilo
+で、私が選ばれたらどーなるの？[p]
+
+[chara_show key="cry" faceKey="normal" time=500 x=-200]   
+#Cry
+それはだな...えーと？[r]
+ふむふむ...[p]
+
+#Cry
+「色がつく」らしいぞ！[p]
+
+[chara_show key="solilo" faceKey="happy" time=500 x=200]
+#Solilo
+わーい！カラフルだー！[p]
+
+#Solilo
+これで白黒の退屈な日常とはおさらばですよ！[p]
+
+[chara_show key="solilo" faceKey="happy_red" time=2000 x=200]
+#Solilo
+...？[p]
+
+[chara_show key="cry" faceKey="doki" time=500 x=-200]   
+#Cry
+まっかになった！[p]
+
+[chara_show key="solilo" faceKey="doki_red" time=500 x=200]
+#Solilo
+ ひどい！手抜きだ！[p]
+ こんなのやだ！もどしてもどして！[p]
+ 
+ [chara_show key="solilo" faceKey="doki" time=500 x=200]
+#Solilo
+ おろ？[p]
+ 
+[chara_show key="cry" faceKey="normal" time=500 x=-200]   
+#Cry
+お。もどったな。[p]
+ 
+[chara_show key="solilo" faceKey="normal" time=500 x=200]
+#Solilo
+ ふう...やっぱこれが落ち着くな...[p]
+ 
+[chara_show key="cry" faceKey="doki" time=500 x=-200]   
+#Cry
+ちなみに。たったそれだけらしい。[p]
+ 
+[chara_show key="solilo" faceKey="doki" time=500 x=200]
+#Solilo
+ 地味だなあ...[p]
+ 
 [jump target="end"]
 
 *end
 
+
+[wait time=1000]
+
 [chara_show key="cry" faceKey="normal" time=500 x=-200]
 [chara_show key="solilo" faceKey="normal" time=500 x=200]
+
+
 
 #Solilo
 さいごに。[p]

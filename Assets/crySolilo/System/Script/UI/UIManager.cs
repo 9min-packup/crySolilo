@@ -209,6 +209,35 @@ namespace CrySolilo
             return uichara.charaCoro;
         }
 
+
+        public Coroutine RotateCharacter(string key, float from, float to, float time = 1.0f)
+        {
+            UICharacter uichara;
+            if (uicharaDict.ContainsKey(key))
+            {
+                uichara = uicharaDict[key];
+            }
+            else
+            {
+                return null;
+            }
+
+            if (uichara.charaCoro != null)
+            {
+                StopCoroutine(uichara.charaCoro);
+                uichara.charaCoro = null;
+            }
+            if (uichara.charaFore == null)
+            {
+                return null;
+            }
+            uichara.charaCoro = TweenUI.Rotate(this, uichara.charaImageFore, from, to, time, 0.0f, () =>
+            {
+
+            });
+            return uichara.charaCoro;
+        }
+
         public Coroutine HideAllCharacter(float time = 1.0f)
         {
             UICharacter uichara = null;

@@ -387,6 +387,34 @@ namespace CrySolilo
                     }
                     yield return CRY_SOLILO.System.uiManager.HideAllCharacter(time);
                 }
+
+                else if (tags[scenarioIndex].tagName == "chara_rotate")
+                {
+                    float time = 1.0f;
+                    string key = "";
+                    float from = 0.0f;
+                    float to = 0.0f;
+                    if (tags[scenarioIndex].properties.ContainsKey("time"))
+                    {
+                        time = float.Parse(tags[scenarioIndex].properties["time"]);
+                        time = time / 1000.0f;
+                    }
+                    if (tags[scenarioIndex].properties.ContainsKey("from"))
+                    {
+                        from = float.Parse(tags[scenarioIndex].properties["from"]);
+                    }
+                    if (tags[scenarioIndex].properties.ContainsKey("to"))
+                    {
+                        to = float.Parse(tags[scenarioIndex].properties["to"]);
+                    }
+                    if (tags[scenarioIndex].properties.ContainsKey("key"))
+                    {
+                        key = tags[scenarioIndex].properties["key"];
+                    }
+                    yield return CRY_SOLILO.System.uiManager.RotateCharacter(key, from, to, time);
+                }
+
+
                 else if (tags[scenarioIndex].tagName == "playbgm")
                 {
                     string key = "";
