@@ -52,9 +52,12 @@ namespace CrySolilo
                 for (int i = 1; i < strArrayA.Length; i++)
                 {
                     string[] strArrayB = strArrayA[i].Split(splitCharsB, StringSplitOptions.RemoveEmptyEntries);
-                    string propatyName = strArrayB[0].Trim(splitCharsC);
-                    string propatyValue = strArrayB[1].Trim(splitCharsC);
-                    tag.properties.Add(propatyName, propatyValue);
+                    if (strArrayB.Length == 2)
+                    {
+                        string propatyName = strArrayB[0].Trim(splitCharsC);
+                        string propatyValue = strArrayB[1].Trim(splitCharsC);
+                        tag.properties.Add(propatyName, propatyValue);
+                    }
                 }
             }
             return tag;

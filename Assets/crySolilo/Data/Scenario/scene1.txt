@@ -1,8 +1,97 @@
 
 
-
 ;これはコメントだよ
+[bg key="bg" time=1000]
+[message_show]
+*moge
+[chara_show key="cry" faceKey="normal" time=500 x=-200]
+#?
+こんにちは。[p]
+#Cry
+私はCry。[p]
+[chara_show key="solilo" faceKey="happy" time=500 x=200]
+#?
+こんにちはー！[p]
+[chara_show key="solilo" faceKey="normal" time=500 x=200]
+私はSolilo。[p]
+#二人
+[chara_show key="cry" faceKey="happy" time=500 x=-200]
+[chara_show key="solilo" faceKey="happy" time=500 x=200]
 
-[bg key="title" time=1000]
-[chara_show key="crySolilo" time=1000]
+「「二人あわせて crySolilo！[r]
+   よろしくね！」」[p]
 
+[chara_show key="cry" faceKey="normal" time=500 x=-200]   
+#Cry
+さて、私たちがここへ来た理由なんだけど。[p]
+
+[chara_show key="solilo" faceKey="normal" time=500 x=200]
+#Solilo
+あなたに、私たちのうちどちらかを選んでもらうためなの。[p]
+
+[chara_show key="cry" faceKey="happy" time=500 x=-200]   
+#Cry
+選ぶ根拠は、好意？好奇心？[r]
+それはあなたのご自由に！[p]
+
+[chara_show key="solilo" faceKey="happy" time=500 x=200]
+#Solilo
+選んだ結果がどうなるか？[r]
+選んでみてのお楽しみ！[p]
+
+
+[chara_show key="cry" faceKey="normal" time=500 x=-200]
+[chara_show key="solilo" faceKey="normal" time=500 x=200]
+#二人
+「「さあ、どちらを選ぶ？？？」」
+
+[button graphic="button" text="Cry" y=100 target="CryRoute" enterimg="button_enter"]
+[button graphic="button" text="Solilo" y=-100 target="SoliloRoute" enterimg="button_enter"]
+[s]
+
+*CryRoute
+
+[chara_show key="cry" faceKey="happy" time=500 x=-200]   
+#Cry
+お、やったぁ！ありがとう[p]
+
+[jump target="end"]
+
+*SoliloRoute
+
+[chara_show key="solilo" faceKey="happy" time=500 x=200]
+#Solilo
+やったぜ！いえい！[p]
+
+[jump target="end"]
+
+*end
+
+[chara_show key="cry" faceKey="normal" time=500 x=-200]
+[chara_show key="solilo" faceKey="normal" time=500 x=200]
+
+#Solilo
+さいごに。[p]
+
+#Cry
+このゲームは試作のノベルゲーム制作アセット
+「crySolilo」で作られています。[r]
+（GitHubにて公開中！）[p]
+
+#Solilo
+まだまだ開発中ですが、今後もアップデートしていく予定なので、
+気になる方はチェックしてみてね！[p]
+
+[chara_show key="cry" faceKey="happy" time=500 x=-200]
+#Cry
+以上、プレイしていただきありがとうございました！[p]
+
+[chara_show key="solilo" faceKey="happy" time=500 x=200]
+#Solilo
+ばいばい！[p]
+
+[chara_hide_all]
+[message_hide]
+
+[jump storage="title"]
+[s]

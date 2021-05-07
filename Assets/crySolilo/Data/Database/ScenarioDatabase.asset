@@ -15,7 +15,7 @@ MonoBehaviour:
   scenarioList:
   - key: first
     scenario: {fileID: 4900000, guid: 642249926e298496a8ab351c27208a30, type: 3}
+  - key: title
+    scenario: {fileID: 4900000, guid: f6b54ec3390d04660906bd310c07c3dc, type: 3}
   - key: scene1
     scenario: {fileID: 4900000, guid: a704187af1b244a73a65df6f732466d6, type: 3}
-  - key: y_s1
-    scenario: {fileID: 4900000, guid: 7debf558941ca49fc82b9f8c7a32a15d, type: 3}

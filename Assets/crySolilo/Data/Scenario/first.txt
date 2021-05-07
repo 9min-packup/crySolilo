@@ -1,46 +1,5 @@
 
 
-
 ;これはコメントだよ
-[bg key="title" time=1000]
-[wait time=1000]
-[button graphic="start" x=-300 y=-100 target="start" enterimg="start_enter"]
 
-[s]
-
-*start
-
-[bg key="bg" time=1000]
-[message_show]
-*moge
-[chara_show key="cry" faceKey="normal" time=1000 x=-200]
-#Cry
-こんにちは。[p]
-私はCry。[p]
-[chara_show key="solilo" faceKey="normal" time=1000 x=200]
-#Solilo
-こんにちは。[p]
-*hoge
-私はSolilo。[p]
-[chara_show key="solilo" faceKey="happy" time=1000 x=200]
-おはぎおはぎおはぎおはぎおはぎ！[p]
-私のおはぎが消えた。[r][l]
-[chara_show key="solilo" faceKey="angry" time=1000 x=200]
-いったいどこへ消えたんだ！！[p]
-
-
-[button graphic="button" y=100 text="おはぎおはぎおはぎ?" target="moge" enterimg="button_enter"]
-[button graphic="button" y=-100 text="おはぎではないなにか" target="end" enterimg="button_enter"]
-[s]
-
-*end
-
-[chara_show key="solilo" faceKey="normal" time=1000 x=200]
-たまらなく煮えたぎる甘味。[r][l]
-みんなどこへ消えた...[p]
-[chara_hide_all time=1000]
-[chara_show key="solilo" faceKey="doki" time=1000 x=200]
-またそういうこと言うの？[r]
-バイタルたけえなあおい。[r]
-うまうまだ。[r]
-[s]
+[jump storage="title"]

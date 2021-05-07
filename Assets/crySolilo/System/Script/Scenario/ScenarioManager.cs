@@ -9,13 +9,16 @@ namespace CrySolilo
     public class ScenarioManager : MonoBehaviour
     {
         public int scenarioIndex = 0;
-        private int scenarioIndexCache = 0;
         public Tag[] tags;
         public Dictionary<string, int> labelIndexDict = new Dictionary<string, int>();
 
-        private bool waitForSubmit = false;
-
         private Coroutine skipCoro, executeCoro;
+
+        private bool jumpRequest = false;
+        private string jumpRequestStorageTarget = null;
+        private string jumpRequestLabelTarget = null;
+
+        private bool executing = false;
 
         private void Start()
         {
@@ -253,23 +256,50 @@ namespace CrySolilo
             }
 
             tags = tagList.ToArray();
-            foreach (var tag in tags)
-            {
-                Debug.Log(tag.ToString());
-            }
         }
 
-        public void ExecuteScenario()
+        public void ExecuteScenario(int index = 0)
         {
-            executeCoro = StartCoroutine(ExecuteScenarioIE());
+            executeCoro = StartCoroutine(ExecuteScenarioIE(index));
         }
 
-        private IEnumerator ExecuteScenarioIE()
+        private IEnumerator ExecuteScenarioIE(int index = 0)
         {
+            executing = true;
             skipCoro = StartCoroutine(SkipTextIE());
-            scenarioIndex = 0;
-            while (scenarioIndex < tags.Length)
+            scenarioIndex = index;
+            jumpRequest = false;
+            jumpRequestStorageTarget = null;
+            jumpRequestLabelTarget = null;
+            while ((scenarioIndex < tags.Length) || jumpRequest)
             {
+                if (jumpRequest)
+                {
+                    if (jumpRequestStorageTarget != null)
+                    {
+                        LoadScenario(jumpRequestStorageTarget);
+                    }
+                    if (jumpRequestLabelTarget != null)
+                    {
+                        if (labelIndexDict.ContainsKey(jumpRequestLabelTarget))
+                        {
+                            scenarioIndex = labelIndexDict[jumpRequestLabelTarget];
+                        }
+                        else
+                        {
+                            scenarioIndex = 0;
+                        }
+                    }
+                    else
+                    {
+                        scenarioIndex = 0;
+                    }
+                    jumpRequest = false;
+                    jumpRequestStorageTarget = null;
+                    jumpRequestLabelTarget = null;
+                    yield return null;
+                    continue;
+                }
                 if (tags[scenarioIndex].tagName == "text")
                 {
                     yield return CRY_SOLILO.System.uiManager.ShowText(tags[scenarioIndex].properties["val"], true);
@@ -559,6 +589,7 @@ namespace CrySolilo
                     string text = null;
                     string enterimg = null;
                     string target = null;
+                    string storage = null;
                     Button.ButtonClickedEvent clickedEvent = new Button.ButtonClickedEvent();
 
                     if (tags[scenarioIndex].properties.ContainsKey("graphic"))
@@ -599,9 +630,13 @@ namespace CrySolilo
                     {
                         target = tags[scenarioIndex].properties["target"];
                     }
+                    if (tags[scenarioIndex].properties.ContainsKey("storage"))
+                    {
+                        storage = tags[scenarioIndex].properties["storage"];
+                    }
                     clickedEvent.AddListener(() =>
                     {
-                        Jump(target);
+                        Jump(storage, target);
                         CRY_SOLILO.System.uiManager.ClearAllButton();
                     });
                     CRY_SOLILO.System.uiManager.CreateButton(graphic, new Vector2(x, y), new Vector2(width, height), color, fontSize, autoAjustSize, text, enterimg, clickedEvent);
@@ -617,7 +652,7 @@ namespace CrySolilo
                             CRY_SOLILO.System.uiManager.ClearText();
                             break;
                         }
-                        if (scenarioIndex != scenarioIndexCache)
+                        if (jumpRequest)
                         {
                             break;
                         }
@@ -632,7 +667,7 @@ namespace CrySolilo
                         {
                             CRY_SOLILO.System.uiManager.ClearText();
                         }
-                        if (scenarioIndex != scenarioIndexCache)
+                        if (jumpRequest)
                         {
                             break;
                         }
@@ -647,7 +682,7 @@ namespace CrySolilo
                         {
                             break;
                         }
-                        if (scenarioIndex != scenarioIndexCache)
+                        if (jumpRequest)
                         {
                             break;
                         }
@@ -670,23 +705,25 @@ namespace CrySolilo
                 }
                 else if (tags[scenarioIndex].tagName == "jump")
                 {
-                    string target = "";
+                    string target = null;
+                    string storage = null;
                     if (tags[scenarioIndex].properties.ContainsKey("target"))
                     {
                         target = tags[scenarioIndex].properties["target"];
                     }
-                    if (labelIndexDict.ContainsKey(target))
+                    if (tags[scenarioIndex].properties.ContainsKey("storage"))
                     {
-                        scenarioIndex = labelIndexDict[target];
+                        storage = tags[scenarioIndex].properties["storage"];
                     }
+                    Jump(storage, target);
                 }
 
                 yield return null;
                 scenarioIndex++;
-                scenarioIndexCache = scenarioIndex;
             }
 
             StopCoroutine(skipCoro);
+            executing = false;
             yield break;
         }
 
@@ -696,19 +733,39 @@ namespace CrySolilo
             StopCoroutine(executeCoro);
         }
 
-        public void Jump(string target)
+        public void Jump(string storageTarget = null, string labelTarget = null)
         {
-            if (target == null)
+            if (executing)
             {
-                return;
-            }
-            if (labelIndexDict.ContainsKey(target))
-            {
-                scenarioIndex = labelIndexDict[target];
+                jumpRequest = true;
+                jumpRequestStorageTarget = storageTarget;
+                jumpRequestLabelTarget = labelTarget;
             }
             else
             {
-                Debug.LogWarning("Label: target " + target + " Not Found");
+                if (jumpRequestStorageTarget != null)
+                {
+                    LoadScenario(jumpRequestStorageTarget);
+                }
+                int index = 0;
+                if (jumpRequestLabelTarget != null)
+                {
+                    if (labelIndexDict.ContainsKey(jumpRequestLabelTarget))
+                    {
+                        scenarioIndex = labelIndexDict[jumpRequestLabelTarget];
+                    }
+                    else
+                    {
+                        index = 0;
+                    }
+                }
+                else
+                {
+                    index = 0;
+                }
+
+
+                ExecuteScenario(index);
             }
         }
 

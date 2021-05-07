@@ -1,0 +1,12 @@
+
+
+;これはコメントだよ
+[bg key="title" time=1000]
+[wait time=1000]
+[button graphic="start" x=-300 y=-100 target="start" enterimg="start_enter"]
+
+[s]
+*start
+[jump storage="scene1"]
+
+
