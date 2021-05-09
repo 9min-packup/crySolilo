@@ -157,7 +157,7 @@
 #Cry
 ちなみに。たったそれだけらしい。[p]
  
-[chara_show key="solilo" faceKey="doki" time=500 x=200]
+[chara_show key="solilo" faceKey="doki" time=00 x=200]
 #Solilo
  地味だなあ...[p]
  

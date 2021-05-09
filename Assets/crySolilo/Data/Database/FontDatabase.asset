@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: FontDatabase
   m_EditorClassIdentifier: 
   fontList:
-  - key: Arial
-    font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+  - key: default
+    font: {fileID: 12800000, guid: ea6cc7e1972e24efc84f6467a19fe0e2, type: 3}

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Setting
   m_EditorClassIdentifier: 
   firstScenarioKey: first
-  defaultFontKey: Arial
+  defaultFontKey: default
   defaultFontSpeed: 20
   defaultFontSize: 38
   defaultNameFontSize: 28
